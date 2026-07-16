@@ -1,0 +1,60 @@
+name: Monitor Pages
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # every hour — adjust as needed (min interval GitHub honors is ~5 min)
+  workflow_dispatch:       # lets you trigger a run manually from the Actions tab
+
+permissions:
+  contents: write   # so the workflow can commit snapshots/reports back
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run monitor
+        # monitor.py exits 1 if pages changed, 2 if a fetch errored.
+        # We don't want that to abort the job before we commit + deploy.
+        continue-on-error: true
+        run: python monitor.py
+
+      - name: Commit updated snapshots and reports
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update snapshots"
+          file_pattern: "snapshots/*.json reports/*.html"
+
+      - name: Prepare Pages site
+        run: |
+          mkdir -p site
+          cp reports/latest.html site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
