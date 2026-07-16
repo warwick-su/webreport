@@ -26,6 +26,17 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Cache Playwright browser binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('requirements.txt') }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
       - name: Run monitor
         # monitor.py exits 1 if pages changed, 2 if a fetch errored.
         # We don't want that to abort the job before we commit + deploy.
