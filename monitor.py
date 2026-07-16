@@ -56,6 +56,29 @@ MAX_ASSETS_PER_PAGE = 25
 POST_LOAD_SETTLE_MS = 2000
 NAVIGATION_TIMEOUT_MS = 30000
 
+# Known analytics/social-widget/tracker domains, blocked outright during
+# rendering. These load asynchronously and inject markup (hidden iframes,
+# pixels, timestamped tracking params) on an unpredictable schedule —
+# that's noise, not a real content edit, and it produces false "changed"
+# reports if left running. Add to this list if you spot a new offender in
+# a report you know wasn't a real edit.
+BLOCKED_DOMAINS = {
+    "clarity.ms",
+    "sharethis.com",
+    "doubleclick.net",
+    "google-analytics.com",
+    "googletagmanager.com",
+    "facebook.net",
+    "connect.facebook.net",
+    "hotjar.com",
+    "mouseflow.com",
+}
+
+
+def is_blocked_domain(url: str) -> bool:
+    netloc = urlparse(url).netloc.lower()
+    return any(netloc == d or netloc.endswith("." + d) for d in BLOCKED_DOMAINS)
+
 # Bumped whenever the snapshot format or fetch method changes, so old
 # snapshots (e.g. from the pre-Playwright version of this script) are
 # treated as needing a fresh baseline instead of causing a false "changed".
@@ -125,6 +148,14 @@ def fetch_rendered(url: str):
         browser = p.chromium.launch()
         try:
             page = browser.new_page(user_agent=USER_AGENT)
+
+            def handle_route(route):
+                if is_blocked_domain(route.request.url):
+                    route.abort()
+                else:
+                    route.continue_()
+
+            page.route("**/*", handle_route)
 
             def handle_response(response):
                 req_url = response.url
