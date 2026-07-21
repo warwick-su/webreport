@@ -84,6 +84,12 @@ def is_blocked_domain(url: str) -> bool:
 # treated as needing a fresh baseline instead of causing a false "changed".
 SNAPSHOT_SCHEMA = "playwright-v1"
 
+LOG_FILENAME = "log.json"
+# Cap on logged change events. Oldest entries (and the report files that
+# become orphaned once no entry points at them any more) are pruned once
+# this is exceeded, so the repo and site don't grow forever.
+MAX_LOG_ENTRIES = 300
+
 # Patterns stripped before hashing/diffing so that timestamps, tokens, and
 # session-specific noise don't register as false-positive "changes".
 NOISE_PATTERNS = [
@@ -315,12 +321,13 @@ def render_report(results, out_path: Path):
         ".add{color:#1a7f37;background:#e6ffec}.del{color:#b31d28;background:#ffebe9}",
         ".warn{color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;border-radius:4px;padding:.5rem .75rem;font-size:.85rem}",
         "</style></head><body>",
+        "<p><a href='index.html'>&larr; Change log</a></p>",
         f"<h1>Page Change Report</h1><p>Generated {ts}</p>",
     ]
 
     for r in results:
         status = r["status"]
-        parts.append(f"<h2>{r['url']}</h2>")
+        parts.append(f"<h2 id='section-{slugify(r['url'])}'>{r['url']}</h2>")
         parts.append(f"<span class='status {status}'>{status.upper()}</span>")
         if status == "error":
             parts.append(f"<p>Error rendering page: {r['error']}</p>")
@@ -352,6 +359,111 @@ def render_report(results, out_path: Path):
     out_path.write_text("\n".join(parts), encoding="utf-8")
 
 
+def load_log() -> list:
+    path = REPORT_DIR / LOG_FILENAME
+    if not path.exists():
+        return []
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def save_log(entries: list):
+    path = REPORT_DIR / LOG_FILENAME
+    path.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+
+
+def prune_unreferenced_reports(entries: list):
+    """Delete report-*.html files no longer pointed at by any log entry,
+    e.g. after old entries fall off the end of the MAX_LOG_ENTRIES window."""
+    referenced = {e["report_file"] for e in entries}
+    for f in REPORT_DIR.glob("report-*.html"):
+        if f.name not in referenced:
+            f.unlink()
+
+
+def render_log_page(entries: list, out_path: Path):
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    parts = [
+        "<!doctype html><html><head><meta charset='utf-8'>",
+        "<title>Change Log</title>",
+        "<style>",
+        "body{font-family:-apple-system,Segoe UI,Arial,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;color:#222}",
+        "h1{font-size:1.4rem}",
+        "table{width:100%;border-collapse:collapse;margin-top:1rem}",
+        "th,td{text-align:left;padding:.5rem .75rem;border-bottom:1px solid #eee;font-size:.9rem;word-break:break-all}",
+        "th{color:#666;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.03em}",
+        "td:first-child{white-space:nowrap;color:#555}",
+        "a{color:#1a73e8;text-decoration:none} a:hover{text-decoration:underline}",
+        ".empty{color:#777;margin-top:1.5rem}",
+        ".nav{margin-bottom:0;font-size:.9rem}",
+        "</style></head><body>",
+        "<h1>Change Log</h1>",
+        f"<p class='nav'>Generated {ts} &middot; <a href='latest.html'>Current status</a></p>",
+    ]
+
+    if not entries:
+        parts.append("<p class='empty'>No changes logged yet — check back after the pages being watched actually change.</p>")
+    else:
+        parts.append("<table><thead><tr><th>When (UTC)</th><th>Page</th><th></th></tr></thead><tbody>")
+        for entry in reversed(entries):  # newest first
+            when = entry["checked_at"].replace("T", " ").split(".")[0] + " UTC"
+            safe_url = entry["url"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            parts.append(
+                "<tr>"
+                f"<td>{when}</td>"
+                f"<td>{safe_url}</td>"
+                f"<td><a href='{entry['report_file']}#{entry['anchor']}'>View diff &rarr;</a></td>"
+                "</tr>"
+            )
+        parts.append("</tbody></table>")
+
+    parts.append("</body></html>")
+    out_path.write_text("\n".join(parts), encoding="utf-8")
+
+
+def run_once(urls: list, init: bool):
+    """Check every URL, refresh the current-status page, and — only for
+    runs where something actually changed — write a permanent report file
+    and append entries to the change log. Returns the per-URL results."""
+    SNAPSHOT_DIR.mkdir(exist_ok=True)
+    REPORT_DIR.mkdir(exist_ok=True)
+
+    results = [check_url(url, init) for url in urls]
+
+    if init:
+        return results
+
+    changed = [r for r in results if r["status"] == "changed"]
+
+    latest_path = REPORT_DIR / "latest.html"
+    render_report(results, latest_path)
+    print(f"Current status written: {latest_path}")
+
+    if changed:
+        ts_file = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
+        report_path = REPORT_DIR / f"report-{ts_file}.html"
+        render_report(results, report_path)
+        print(f"Change report written: {report_path}")
+
+        log_entries = load_log()
+        for r in changed:
+            log_entries.append({
+                "checked_at": r["checked_at"],
+                "url": r["url"],
+                "report_file": report_path.name,
+                "anchor": f"section-{slugify(r['url'])}",
+            })
+        log_entries = log_entries[-MAX_LOG_ENTRIES:]
+        save_log(log_entries)
+        prune_unreferenced_reports(log_entries)
+
+    render_log_page(load_log(), REPORT_DIR / "index.html")
+
+    return results
+
+
 def main():
     parser = argparse.ArgumentParser(description="Monitor pages for HTML/CSS/JS changes, including JS-rendered content.")
     parser.add_argument("--init", action="store_true", help="Take baseline snapshots only, skip report.")
@@ -362,21 +474,10 @@ def main():
     if args.urls:
         urls = [line.strip() for line in args.urls.read_text().splitlines() if line.strip()]
 
-    SNAPSHOT_DIR.mkdir(exist_ok=True)
-    REPORT_DIR.mkdir(exist_ok=True)
-
-    results = [check_url(url, args.init) for url in urls]
+    results = run_once(urls, args.init)
 
     changed = [r for r in results if r["status"] == "changed"]
     errors = [r for r in results if r["status"] == "error"]
-
-    if not args.init:
-        ts_file = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-        report_path = REPORT_DIR / f"report-{ts_file}.html"
-        render_report(results, report_path)
-        latest_path = REPORT_DIR / "latest.html"
-        latest_path.write_text(report_path.read_text(encoding="utf-8"), encoding="utf-8")
-        print(f"Report written: {report_path}")
 
     for r in results:
         print(f"[{r['status'].upper():>9}] {r['url']}")
