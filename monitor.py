@@ -216,14 +216,91 @@ def save_snapshot(slug: str, url: str, html_hash: str, html_normalized: str,
     return payload
 
 
-def diff_lines(old_text: str, new_text: str, context: int = 2):
-    old_lines = (old_text or "").splitlines()
-    new_lines = (new_text or "").splitlines()
-    diff = difflib.unified_diff(
-        old_lines, new_lines, lineterm="", n=context,
-        fromfile="previous", tofile="current",
-    )
-    return list(diff)
+def _tokenize_for_diff(text: str) -> list:
+    """Break markup/code into small chunks — roughly one HTML tag, or one
+    CSS/JS statement — so a diff operates at a meaningful granularity even
+    when the source is nearly all on one line (common on CMS-rendered pages)."""
+    spaced = re.sub(r'(?<=[>;{}])', '\n', text or "")
+    return spaced.split("\n")
+
+
+_WORD_RE = re.compile(r'\w+|\s+|.', re.DOTALL)
+
+
+def _tokenize_words(line: str) -> list:
+    return _WORD_RE.findall(line)
+
+
+def _escape(s: str) -> str:
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _inline_word_diff(old_line: str, new_line: str):
+    """Diff two changed lines token-by-token, so only the specific words/
+    attributes that actually differ get wrapped in <del>/<ins> — the rest
+    of the line renders as plain text either side of the change."""
+    old_tokens = _tokenize_words(old_line)
+    new_tokens = _tokenize_words(new_line)
+    sm = difflib.SequenceMatcher(None, old_tokens, new_tokens, autojunk=False)
+    old_parts, new_parts = [], []
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        old_chunk = _escape("".join(old_tokens[i1:i2]))
+        new_chunk = _escape("".join(new_tokens[j1:j2]))
+        if tag == "equal":
+            old_parts.append(old_chunk)
+            new_parts.append(new_chunk)
+        else:
+            if old_chunk:
+                old_parts.append(f"<del>{old_chunk}</del>")
+            if new_chunk:
+                new_parts.append(f"<ins>{new_chunk}</ins>")
+    return "".join(old_parts), "".join(new_parts)
+
+
+def render_diff_html(old_text: str, new_text: str, context: int = 1) -> str:
+    """Render a compact HTML diff: long unchanged stretches collapse to a
+    short "N unchanged lines" marker, and changed lines highlight only the
+    specific tokens that differ rather than colouring the whole line."""
+    old_lines = _tokenize_for_diff(old_text)
+    new_lines = _tokenize_for_diff(new_text)
+    sm = difflib.SequenceMatcher(None, old_lines, new_lines, autojunk=False)
+    opcodes = sm.get_opcodes()
+    out = []
+
+    for idx, (tag, i1, i2, j1, j2) in enumerate(opcodes):
+        if tag == "equal":
+            block = old_lines[i1:i2]
+            is_first, is_last = idx == 0, idx == len(opcodes) - 1
+            head = [] if is_first else block[:context]
+            tail = [] if is_last else block[-context:] if len(block) > len(head) else []
+            hidden = len(block) - len(head) - len(tail)
+            for ln in head:
+                out.append(f"<div class='ctx'>{_escape(ln)}</div>")
+            if hidden > 0:
+                noun = "line" if hidden == 1 else "lines"
+                out.append(f"<div class='skip'>&hellip; {hidden} unchanged {noun} &hellip;</div>")
+            for ln in tail:
+                out.append(f"<div class='ctx'>{_escape(ln)}</div>")
+        elif tag == "delete":
+            for ln in old_lines[i1:i2]:
+                out.append(f"<div class='del-line'>{_escape(ln)}</div>")
+        elif tag == "insert":
+            for ln in new_lines[j1:j2]:
+                out.append(f"<div class='ins-line'>{_escape(ln)}</div>")
+        elif tag == "replace":
+            old_block, new_block = old_lines[i1:i2], new_lines[j1:j2]
+            if len(old_block) == len(new_block):
+                for old_ln, new_ln in zip(old_block, new_block):
+                    old_html, new_html = _inline_word_diff(old_ln, new_ln)
+                    out.append(f"<div class='del-line'>{old_html}</div>")
+                    out.append(f"<div class='ins-line'>{new_html}</div>")
+            else:
+                for ln in old_block:
+                    out.append(f"<div class='del-line'>{_escape(ln)}</div>")
+                for ln in new_block:
+                    out.append(f"<div class='ins-line'>{_escape(ln)}</div>")
+
+    return "\n".join(out) if out else "<div class='ctx'>(no textual difference detected)</div>"
 
 
 def compute_overall_hash(html_hash: str, assets: dict) -> str:
@@ -278,7 +355,9 @@ def check_url(url: str, init: bool):
     if html_hash != previous.get("html_hash"):
         result["diff_sections"].append({
             "label": "Page HTML (post-render)",
-            "diff": diff_lines(previous.get("html_normalized", ""), html_normalized),
+            "kind": "modified",
+            "old": previous.get("html_normalized", ""),
+            "new": html_normalized,
         })
 
     old_assets = previous.get("assets", {}) or {}
@@ -289,18 +368,14 @@ def check_url(url: str, init: bool):
             if old_a["hash"] != new_a["hash"]:
                 result["diff_sections"].append({
                     "label": asset_url,
-                    "diff": diff_lines(old_a["normalized"], new_a["normalized"]),
+                    "kind": "modified",
+                    "old": old_a["normalized"],
+                    "new": new_a["normalized"],
                 })
         elif old_a and not new_a:
-            result["diff_sections"].append({
-                "label": asset_url,
-                "diff": ["-- resource no longer observed loading on this page --"],
-            })
+            result["diff_sections"].append({"label": asset_url, "kind": "removed"})
         elif new_a and not old_a:
-            result["diff_sections"].append({
-                "label": asset_url,
-                "diff": ["++ new resource observed loading on this page ++"],
-            })
+            result["diff_sections"].append({"label": asset_url, "kind": "added"})
 
     save_snapshot(slug, url, html_hash, html_normalized, assets, overall_hash)
     return result
@@ -317,8 +392,15 @@ def render_report(results, out_path: Path):
         "h3{font-size:.95rem;margin-top:1.25rem;word-break:break-all;color:#444}",
         ".status{display:inline-block;padding:.15rem .6rem;border-radius:4px;font-size:.8rem;font-weight:600;color:#fff}",
         ".changed{background:#d9534f}.unchanged{background:#5cb85c}.baseline{background:#5bc0de}.error{background:#777}",
-        "pre{background:#f7f7f7;border:1px solid #ddd;border-radius:4px;padding:.75rem;overflow-x:auto;font-size:.85rem;line-height:1.4}",
-        ".add{color:#1a7f37;background:#e6ffec}.del{color:#b31d28;background:#ffebe9}",
+        ".diff{background:#f7f7f7;border:1px solid #ddd;border-radius:4px;padding:.4rem 0;overflow-x:auto;",
+        "font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.5}",
+        ".diff>div{padding:.05rem .75rem;white-space:pre-wrap;word-break:break-word}",
+        ".diff .ctx{color:#666}",
+        ".diff .skip{color:#888;font-style:italic;text-align:center;padding:.3rem 0!important}",
+        ".diff .del-line{background:#ffebe9}.diff .ins-line{background:#e6ffec}",
+        ".diff .del-line del{background:#fdb8c0;text-decoration:line-through;border-radius:2px}",
+        ".diff .ins-line ins{background:#abf2bc;text-decoration:none;border-radius:2px}",
+        ".note{color:#555;font-size:.85rem}",
         ".warn{color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;border-radius:4px;padding:.5rem .75rem;font-size:.85rem}",
         "</style></head><body>",
         "<p><a href='index.html'>&larr; Change log</a></p>",
@@ -338,16 +420,13 @@ def render_report(results, out_path: Path):
         elif status == "changed":
             for section in r["diff_sections"]:
                 parts.append(f"<h3>{section['label']}</h3>")
-                parts.append("<pre>")
-                for line in section["diff"]:
-                    safe = line.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                    if line.startswith("+") and not line.startswith("+++"):
-                        parts.append(f"<span class='add'>{safe}</span>")
-                    elif line.startswith("-") and not line.startswith("---"):
-                        parts.append(f"<span class='del'>{safe}</span>")
-                    else:
-                        parts.append(safe)
-                parts.append("</pre>")
+                kind = section.get("kind")
+                if kind == "removed":
+                    parts.append("<p class='note'>Resource no longer observed loading on this page.</p>")
+                elif kind == "added":
+                    parts.append("<p class='note'>New resource now observed loading on this page.</p>")
+                else:
+                    parts.append(f"<div class='diff'>{render_diff_html(section['old'], section['new'])}</div>")
 
         if r.get("asset_errors"):
             parts.append("<div class='warn'>Some same-origin CSS/JS responses couldn't be read, so they weren't checked this run:<ul>")
