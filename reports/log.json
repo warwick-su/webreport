@@ -1,17 +1,5 @@
 [
   {
-    "checked_at": "2026-09-15T13:58:03.829990+00:00",
-    "url": "https://www.warwicksu.com/venues-events/events/",
-    "report_file": "report-20260915-135818-204850.html",
-    "anchor": "section-de59b32982af6c02"
-  },
-  {
-    "checked_at": "2026-09-15T17:55:02.698238+00:00",
-    "url": "https://www.warwicksu.com/venues-events/events/",
-    "report_file": "report-20260915-175517-416416.html",
-    "anchor": "section-de59b32982af6c02"
-  },
-  {
     "checked_at": "2026-09-15T17:55:12.298208+00:00",
     "url": "https://www.warwicksu.com/student-voice/elections/postsandcandidates/1756/",
     "report_file": "report-20260915-175517-416416.html",
@@ -1798,5 +1786,17 @@
     "url": "https://www.warwicksu.com/venues-events/events/",
     "report_file": "report-20261018-220208-109938.html",
     "anchor": "section-de59b32982af6c02"
+  },
+  {
+    "checked_at": "2026-10-19T00:35:46.705731+00:00",
+    "url": "https://www.warwicksu.com/venues-events/events/",
+    "report_file": "report-20261019-003602-722786.html",
+    "anchor": "section-de59b32982af6c02"
+  },
+  {
+    "checked_at": "2026-10-19T00:35:58.237747+00:00",
+    "url": "https://www.warwicksu.com/student-voice/elections/postsandcandidates/1756/",
+    "report_file": "report-20261019-003602-722786.html",
+    "anchor": "section-4133eee31265070c"
   }
 ]
