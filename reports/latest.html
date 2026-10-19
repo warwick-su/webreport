@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset='utf-8'>
-<title>Page Change Report — 2026-10-19 05:28 UTC</title>
+<title>Page Change Report — 2026-10-19 11:31 UTC</title>
 <style>
 body{font-family:-apple-system,Segoe UI,Arial,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;color:#222}
 h1{font-size:1.4rem} h2{font-size:1.1rem;margin-top:2rem;word-break:break-all}
@@ -18,14 +18,491 @@ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82re
 .warn{color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;border-radius:4px;padding:.5rem .75rem;font-size:.85rem}
 </style></head><body>
 <p><a href='index.html'>&larr; Change log</a></p>
-<h1>Page Change Report</h1><p>Generated 2026-10-19 05:28 UTC</p>
+<h1>Page Change Report</h1><p>Generated 2026-10-19 11:31 UTC</p>
 <h2 id='section-de59b32982af6c02'>https://www.warwicksu.com/venues-events/events/</h2>
-<span class='status unchanged'>UNCHANGED</span>
-<p>No differences detected since last check (rendered HTML, or any same-origin CSS/JS).</p>
+<span class='status changed'>CHANGED</span>
+<h3>Page HTML (post-render)</h3>
+<div class='diff'><div class='skip'>&hellip; 2080 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;!-- variables used to customize pop up behavior --&gt;</div>
+<div class='ins-line'>&lt;script id="variables"&gt;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // enable or disable the pop up entirely</div>
+<div class='ins-line'> const enablePopUp = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // select one of the following options:</div>
+<div class='ins-line'> // autumn, spring, summer, asv</div>
+<div class='ins-line'> const popUpType = 'autumn';</div>
+<div class='ins-line'> </div>
+<div class='ins-line'> // start display date and time. Format: YYYY-MM-DD HH:MM:SS (24h)</div>
+<div class='ins-line'> const startDateTime = new Date("October 19, 2026 ");</div>
+<div class='ins-line'> // 04/03/24 9am</div>
+<div class='ins-line'> // end display date and time. Format: YYYY-MM-DD HH:MM:SS (24h)</div>
+<div class='ins-line'> const endDateTime = new Date("October 23, 2026 ");</div>
+<div class='ins-line'> // 08/03/23 4pm</div>
+<div class='ins-line'> // href link for the "vote now" button</div>
+<div class='ins-line'> const hrefLink = 'https://www.warwicksu.com/elections-redirect/?utm_source=website&amp;utm_medium=popup&amp;utm_campaign=elections-vote-autumn-2026';</div>
+<div class='ins-line'></div>
+<div class='ins-line'>&lt;/script&gt;</div>
+<div class='ctx'>&lt;!-- main pop up HTML --&gt;</div>
+<div class='ins-line'>&lt;aside id="election-message" class="signup-modal" style="display: block;</div>
+<div class='ins-line'>"&gt;</div>
+<div class='ins-line'>&lt;div class="signup-modal--overlay"&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="signup-modal--card"&gt;</div>
+<div class='ins-line'>&lt;div class="close"&gt;</div>
+<div class='ins-line'>&lt;img id="election-pop-up-close-button" src="/assets/site_resources/close-button.png" alt="Close button"&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="pop-up-container"&gt;</div>
+<div class='ins-line'>&lt;h3 id="election-pop-up-header"&gt;</div>
+<div class='ins-line'>Have you voted in the SU Autumn Elections?&lt;/h3&gt;</div>
+<div class='ins-line'>&lt;p id="election-pop-up-text"&gt;</div>
+<div class='ins-line'>Don't forget to self-define to be eligible to vote for your representatives.&lt;/p&gt;</div>
+<div class='ins-line'>&lt;p&gt;</div>
+<div class='ins-line'>It only takes a few minutes!&lt;/p&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="pop-up-image"&gt;</div>
+<div class='ins-line'>&lt;img src="/assets/site_resources/makeyourmark-popup-logo.png" alt="Nominate" title=""&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;span class="vote-now-button"&gt;</div>
+<div class='ins-line'>&lt;a id="vote-now-button-link" href="https://www.warwicksu.com/elections-redirect/?utm_source=website&amp;amp;</div>
+<div class='ins-line'>utm_medium=popup&amp;amp;</div>
+<div class='ins-line'>utm_campaign=elections-vote-autumn-2026"&gt;</div>
+<div class='ins-line'>Vote</div>
+<div class='ins-line'> now&lt;/a&gt;</div>
+<div class='ins-line'>&lt;/span&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;/aside&gt;</div>
+<div class='ctx'>&lt;!-- css shared among all pop up types --&gt;</div>
+<div class='skip'>&hellip; 528 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;!-- manages pop up style changes --&gt;</div>
+<div class='ins-line'>&lt;script id="main-script"&gt;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // get elements from the DOM that need to be manipulated depending on the pop up type</div>
+<div class='ins-line'> const button = document.getElementById('election-pop-up-close-button');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const header = document.getElementById('election-pop-up-header');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const text = document.getElementById('election-pop-up-text');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // get the style sheets that need to be manipulated depending on the pop up type</div>
+<div class='ins-line'> const autumnStyles = document.getElementById('autumn-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const springStyles = document.getElementById('spring-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const summerStyles = document.getElementById('summer-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const asvStyles = document.getElementById('asv-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set the href of the vote now button</div>
+<div class='ins-line'> document.getElementById('vote-now-button-link').href = hrefLink;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> switch (popUpType) {</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'autumn':</div>
+<div class='ins-line'> // set DOM elements to autumn values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the SU Autumn Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to autumn values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'spring':</div>
+<div class='ins-line'> // set DOM elements to spring values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-green.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the Spring Officer Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to spring values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'summer':</div>
+<div class='ins-line'> // set DOM elements to summer values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-summer.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the Summer Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to summer values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'asv':</div>
+<div class='ins-line'> // set DOM elements to ASV values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-asv.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the All Student Vote?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to ASV values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> }</div>
+<div class='ins-line'></div>
+<div class='ins-line'>&lt;/script&gt;</div>
+<div class='ctx'>&lt;!-- manages cookie distribution and verification --&gt;</div>
+<div class='skip'>&hellip; 4430 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;/dl&gt;</div>
+<div class='ins-line'>&lt;dd class="msl_event_tickets"&gt;</div>
+<div class='ins-line'>&lt;a href="/events/12464/28925/"&gt;</div>
+<div class='ins-line'>Buy Tickets&lt;/a&gt;</div>
+<div class='ins-line'>&lt;/dd&gt;</div>
+<div class='ctx'>&lt;/div&gt;</div>
+<div class='skip'>&hellip; 1187 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;a href="/events/4163/28996/" class="msl_event_name"&gt;</div>
+<div class='del-line'><del>Histsoc</del> International Tour 2026/7&lt;/a&gt;</div>
+<div class='ins-line'><ins>HistSoc</ins> International Tour 2026/7&lt;/a&gt;</div>
+<div class='ctx'>&lt;/dt&gt;</div>
+<div class='skip'>&hellip; 502 unchanged lines &hellip;</div></div>
 <h2 id='section-3ae334970831cb51'>https://www.warwicksu.com/Shop/ReviewBasket/</h2>
-<span class='status unchanged'>UNCHANGED</span>
-<p>No differences detected since last check (rendered HTML, or any same-origin CSS/JS).</p>
+<span class='status changed'>CHANGED</span>
+<h3>Page HTML (post-render)</h3>
+<div class='diff'><div class='skip'>&hellip; 1701 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;!-- variables used to customize pop up behavior --&gt;</div>
+<div class='ins-line'>&lt;script id="variables"&gt;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // enable or disable the pop up entirely</div>
+<div class='ins-line'> const enablePopUp = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // select one of the following options:</div>
+<div class='ins-line'> // autumn, spring, summer, asv</div>
+<div class='ins-line'> const popUpType = 'autumn';</div>
+<div class='ins-line'> </div>
+<div class='ins-line'> // start display date and time. Format: YYYY-MM-DD HH:MM:SS (24h)</div>
+<div class='ins-line'> const startDateTime = new Date("October 19, 2026 ");</div>
+<div class='ins-line'> // 04/03/24 9am</div>
+<div class='ins-line'> // end display date and time. Format: YYYY-MM-DD HH:MM:SS (24h)</div>
+<div class='ins-line'> const endDateTime = new Date("October 23, 2026 ");</div>
+<div class='ins-line'> // 08/03/23 4pm</div>
+<div class='ins-line'> // href link for the "vote now" button</div>
+<div class='ins-line'> const hrefLink = 'https://www.warwicksu.com/elections-redirect/?utm_source=website&amp;utm_medium=popup&amp;utm_campaign=elections-vote-autumn-2026';</div>
+<div class='ins-line'></div>
+<div class='ins-line'>&lt;/script&gt;</div>
+<div class='ctx'>&lt;!-- main pop up HTML --&gt;</div>
+<div class='ins-line'>&lt;aside id="election-message" class="signup-modal" style="display: block;</div>
+<div class='ins-line'>"&gt;</div>
+<div class='ins-line'>&lt;div class="signup-modal--overlay"&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="signup-modal--card"&gt;</div>
+<div class='ins-line'>&lt;div class="close"&gt;</div>
+<div class='ins-line'>&lt;img id="election-pop-up-close-button" src="/assets/site_resources/close-button.png" alt="Close button"&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="pop-up-container"&gt;</div>
+<div class='ins-line'>&lt;h3 id="election-pop-up-header"&gt;</div>
+<div class='ins-line'>Have you voted in the SU Autumn Elections?&lt;/h3&gt;</div>
+<div class='ins-line'>&lt;p id="election-pop-up-text"&gt;</div>
+<div class='ins-line'>Don't forget to self-define to be eligible to vote for your representatives.&lt;/p&gt;</div>
+<div class='ins-line'>&lt;p&gt;</div>
+<div class='ins-line'>It only takes a few minutes!&lt;/p&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="pop-up-image"&gt;</div>
+<div class='ins-line'>&lt;img src="/assets/site_resources/makeyourmark-popup-logo.png" alt="Nominate" title=""&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;span class="vote-now-button"&gt;</div>
+<div class='ins-line'>&lt;a id="vote-now-button-link" href="https://www.warwicksu.com/elections-redirect/?utm_source=website&amp;amp;</div>
+<div class='ins-line'>utm_medium=popup&amp;amp;</div>
+<div class='ins-line'>utm_campaign=elections-vote-autumn-2026"&gt;</div>
+<div class='ins-line'>Vote</div>
+<div class='ins-line'> now&lt;/a&gt;</div>
+<div class='ins-line'>&lt;/span&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;/aside&gt;</div>
+<div class='ctx'>&lt;!-- css shared among all pop up types --&gt;</div>
+<div class='skip'>&hellip; 528 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;!-- manages pop up style changes --&gt;</div>
+<div class='ins-line'>&lt;script id="main-script"&gt;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // get elements from the DOM that need to be manipulated depending on the pop up type</div>
+<div class='ins-line'> const button = document.getElementById('election-pop-up-close-button');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const header = document.getElementById('election-pop-up-header');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const text = document.getElementById('election-pop-up-text');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // get the style sheets that need to be manipulated depending on the pop up type</div>
+<div class='ins-line'> const autumnStyles = document.getElementById('autumn-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const springStyles = document.getElementById('spring-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const summerStyles = document.getElementById('summer-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const asvStyles = document.getElementById('asv-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set the href of the vote now button</div>
+<div class='ins-line'> document.getElementById('vote-now-button-link').href = hrefLink;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> switch (popUpType) {</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'autumn':</div>
+<div class='ins-line'> // set DOM elements to autumn values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the SU Autumn Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to autumn values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'spring':</div>
+<div class='ins-line'> // set DOM elements to spring values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-green.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the Spring Officer Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to spring values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'summer':</div>
+<div class='ins-line'> // set DOM elements to summer values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-summer.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the Summer Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to summer values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'asv':</div>
+<div class='ins-line'> // set DOM elements to ASV values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-asv.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the All Student Vote?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to ASV values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> }</div>
+<div class='ins-line'></div>
+<div class='ins-line'>&lt;/script&gt;</div>
+<div class='ctx'>&lt;!-- manages cookie distribution and verification --&gt;</div>
+<div class='skip'>&hellip; 611 unchanged lines &hellip;</div></div>
 <h2 id='section-4133eee31265070c'>https://www.warwicksu.com/student-voice/elections/postsandcandidates/1756/</h2>
-<span class='status unchanged'>UNCHANGED</span>
-<p>No differences detected since last check (rendered HTML, or any same-origin CSS/JS).</p>
+<span class='status changed'>CHANGED</span>
+<h3>Page HTML (post-render)</h3>
+<div class='diff'><div class='skip'>&hellip; 1827 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;!-- variables used to customize pop up behavior --&gt;</div>
+<div class='ins-line'>&lt;script id="variables"&gt;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // enable or disable the pop up entirely</div>
+<div class='ins-line'> const enablePopUp = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // select one of the following options:</div>
+<div class='ins-line'> // autumn, spring, summer, asv</div>
+<div class='ins-line'> const popUpType = 'autumn';</div>
+<div class='ins-line'> </div>
+<div class='ins-line'> // start display date and time. Format: YYYY-MM-DD HH:MM:SS (24h)</div>
+<div class='ins-line'> const startDateTime = new Date("October 19, 2026 ");</div>
+<div class='ins-line'> // 04/03/24 9am</div>
+<div class='ins-line'> // end display date and time. Format: YYYY-MM-DD HH:MM:SS (24h)</div>
+<div class='ins-line'> const endDateTime = new Date("October 23, 2026 ");</div>
+<div class='ins-line'> // 08/03/23 4pm</div>
+<div class='ins-line'> // href link for the "vote now" button</div>
+<div class='ins-line'> const hrefLink = 'https://www.warwicksu.com/elections-redirect/?utm_source=website&amp;utm_medium=popup&amp;utm_campaign=elections-vote-autumn-2026';</div>
+<div class='ins-line'></div>
+<div class='ins-line'>&lt;/script&gt;</div>
+<div class='ctx'>&lt;!-- main pop up HTML --&gt;</div>
+<div class='ins-line'>&lt;aside id="election-message" class="signup-modal" style="display: block;</div>
+<div class='ins-line'>"&gt;</div>
+<div class='ins-line'>&lt;div class="signup-modal--overlay"&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="signup-modal--card"&gt;</div>
+<div class='ins-line'>&lt;div class="close"&gt;</div>
+<div class='ins-line'>&lt;img id="election-pop-up-close-button" src="/assets/site_resources/close-button.png" alt="Close button"&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="pop-up-container"&gt;</div>
+<div class='ins-line'>&lt;h3 id="election-pop-up-header"&gt;</div>
+<div class='ins-line'>Have you voted in the SU Autumn Elections?&lt;/h3&gt;</div>
+<div class='ins-line'>&lt;p id="election-pop-up-text"&gt;</div>
+<div class='ins-line'>Don't forget to self-define to be eligible to vote for your representatives.&lt;/p&gt;</div>
+<div class='ins-line'>&lt;p&gt;</div>
+<div class='ins-line'>It only takes a few minutes!&lt;/p&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;div class="pop-up-image"&gt;</div>
+<div class='ins-line'>&lt;img src="/assets/site_resources/makeyourmark-popup-logo.png" alt="Nominate" title=""&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;span class="vote-now-button"&gt;</div>
+<div class='ins-line'>&lt;a id="vote-now-button-link" href="https://www.warwicksu.com/elections-redirect/?utm_source=website&amp;amp;</div>
+<div class='ins-line'>utm_medium=popup&amp;amp;</div>
+<div class='ins-line'>utm_campaign=elections-vote-autumn-2026"&gt;</div>
+<div class='ins-line'>Vote</div>
+<div class='ins-line'> now&lt;/a&gt;</div>
+<div class='ins-line'>&lt;/span&gt;</div>
+<div class='ins-line'>&lt;/div&gt;</div>
+<div class='ins-line'>&lt;/aside&gt;</div>
+<div class='ctx'>&lt;!-- css shared among all pop up types --&gt;</div>
+<div class='skip'>&hellip; 528 unchanged lines &hellip;</div>
+<div class='ctx'>&lt;!-- manages pop up style changes --&gt;</div>
+<div class='ins-line'>&lt;script id="main-script"&gt;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // get elements from the DOM that need to be manipulated depending on the pop up type</div>
+<div class='ins-line'> const button = document.getElementById('election-pop-up-close-button');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const header = document.getElementById('election-pop-up-header');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const text = document.getElementById('election-pop-up-text');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // get the style sheets that need to be manipulated depending on the pop up type</div>
+<div class='ins-line'> const autumnStyles = document.getElementById('autumn-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const springStyles = document.getElementById('spring-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const summerStyles = document.getElementById('summer-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> const asvStyles = document.getElementById('asv-styles');</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set the href of the vote now button</div>
+<div class='ins-line'> document.getElementById('vote-now-button-link').href = hrefLink;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> switch (popUpType) {</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'autumn':</div>
+<div class='ins-line'> // set DOM elements to autumn values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the SU Autumn Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to autumn values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'spring':</div>
+<div class='ins-line'> // set DOM elements to spring values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-green.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the Spring Officer Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to spring values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'summer':</div>
+<div class='ins-line'> // set DOM elements to summer values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-summer.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the Summer Elections?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to summer values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> case 'asv':</div>
+<div class='ins-line'> // set DOM elements to ASV values</div>
+<div class='ins-line'> button.src = '/assets/site_resources/close-button-asv.png';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> header.innerHTML = 'Have you voted in the All Student Vote?';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> text.style.display = 'none';</div>
+<div class='ins-line'></div>
+<div class='ins-line'> // set style sheets to ASV values, disable others</div>
+<div class='ins-line'> autumnStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> springStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> summerStyles.disabled = true;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> asvStyles.disabled = false;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> break;</div>
+<div class='ins-line'></div>
+<div class='ins-line'> }</div>
+<div class='ins-line'></div>
+<div class='ins-line'>&lt;/script&gt;</div>
+<div class='ctx'>&lt;!-- manages cookie distribution and verification --&gt;</div>
+<div class='skip'>&hellip; 1437 unchanged lines &hellip;</div></div>
 </body></html>
