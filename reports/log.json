@@ -1,11 +1,5 @@
 [
   {
-    "checked_at": "2026-09-16T17:50:27.230626+00:00",
-    "url": "https://www.warwicksu.com/venues-events/events/",
-    "report_file": "report-20260916-175041-706225.html",
-    "anchor": "section-de59b32982af6c02"
-  },
-  {
     "checked_at": "2026-09-16T23:23:32.583687+00:00",
     "url": "https://www.warwicksu.com/venues-events/events/",
     "report_file": "report-20260916-232349-927424.html",
@@ -1797,6 +1791,12 @@
     "checked_at": "2026-10-19T17:56:22.475323+00:00",
     "url": "https://www.warwicksu.com/venues-events/events/",
     "report_file": "report-20261019-175637-514316.html",
+    "anchor": "section-de59b32982af6c02"
+  },
+  {
+    "checked_at": "2026-10-19T21:52:39.144305+00:00",
+    "url": "https://www.warwicksu.com/venues-events/events/",
+    "report_file": "report-20261019-215252-364297.html",
     "anchor": "section-de59b32982af6c02"
   }
 ]
